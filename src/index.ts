@@ -5,6 +5,7 @@ import { connectDB } from './config/db';
 import sessionRoutes from './routes/session.routes';
 import esp32Routes from './routes/esp32.routes';
 import { errorHandler } from './middlewares/error.middleware';
+import notificationsRoutes from './routes/notification.routes';
 
 dotenv.config();
 
@@ -20,8 +21,8 @@ app.use(errorHandler);
 // Aquí importaremos las rutas
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/esp32', esp32Routes);
-//app.use('/api/sensors', sensorRoutes);
-//app.use('/api/notifications', notificationRoutes);
+app.use('/api/notifications', notificationsRoutes);
+
 
 app.get('/', (_req, res) => {
   res.json({ message: 'Backend de carrito podador funcionando!' });
