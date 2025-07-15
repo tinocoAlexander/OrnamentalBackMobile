@@ -7,24 +7,26 @@ import {
   getSessionByIdService,
   deleteSessionService
 } from '../services/session.service';
+import { successResponse, errorResponse } from '../utils/response';
+import { logger } from '../utils/logger';
 
 export const startSession = async (_req: Request, res: Response) => {
   try {
     const session = await startSessionService();
-    res.status(201).json(session);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to start session' });
+    res.status(201).json(successResponse(session, 'Session started'));
+  } catch (error: any) {
+    logger.error(error);
+    res.status(500).json(errorResponse(error.message, 500));
   }
 };
 
 export const getSessions = async (_req: Request, res: Response) => {
   try {
     const sessions = await getSessionsService();
-    res.json(sessions);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to get sessions' });
+    res.json(successResponse(sessions, 'Sessions fetched'));
+  } catch (error: any) {
+    logger.error(error);
+    res.status(500).json(errorResponse(error.message, 500));
   }
 };
 
@@ -33,15 +35,15 @@ export const updateSessionPath = async (req: Request, res: Response) => {
   const { position, phase } = req.body;
 
   if (!['mapping', 'cutting'].includes(phase)) {
-    return res.status(400).json({ message: 'Invalid phase' });
+    return res.status(400).json(errorResponse('Invalid phase', 400));
   }
 
   try {
     const session = await updateSessionPathService(id, position, phase);
-    res.json(session);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    res.json(successResponse(session, 'Session path updated'));
+  } catch (error: any) {
+    logger.error(error);
+    res.status(500).json(errorResponse(error.message, 500));
   }
 };
 
@@ -51,27 +53,29 @@ export const updateSessionStatus = async (req: Request, res: Response) => {
 
   try {
     const session = await updateSessionStatusService(id, status);
-    res.json(session);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: error.message });
+    res.json(successResponse(session, 'Session status updated'));
+  } catch (error: any) {
+    logger.error(error);
+    res.status(500).json(errorResponse(error.message, 500));
   }
 };
 
 export const getSessionById = async (req: Request, res: Response) => {
   try {
     const session = await getSessionByIdService(req.params.id);
-    res.json(session);
-  } catch (err) {
-    res.status(err.status || 500).json({ message: err.message });
+    res.json(successResponse(session, 'Session fetched'));
+  } catch (err: any) {
+    logger.error(err);
+    res.status(err.status || 500).json(errorResponse(err.message, err.status || 500));
   }
 };
 
 export const deleteSession = async (req: Request, res: Response) => {
   try {
     const session = await deleteSessionService(req.params.id);
-    res.json({ message: 'Session deleted', session });
-  } catch (err) {
-    res.status(err.status || 500).json({ message: err.message });
+    res.json(successResponse(session, 'Session deleted'));
+  } catch (err: any) {
+    logger.error(err);
+    res.status(err.status || 500).json(errorResponse(err.message, err.status || 500));
   }
 };

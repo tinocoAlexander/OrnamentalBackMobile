@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose';
 const NotificationSchema = new Schema({
   type: {
     type: String,
-    enum: ['obstacle', 'low_battery', 'maintenance', 'session_complete', 'error', 'connection'],
+    enum: ['obstacle', 'maintenance', 'session_complete', 'error', 'connection'],
     required: true,
   },
   title: { type: String, required: true },

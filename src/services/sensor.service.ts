@@ -2,8 +2,7 @@ import { SensorData } from '../models/SensorData';
 
 export const saveSensorData = async (data: any) => {
   const sensorData = new SensorData(data);
-  await sensorData.save();
-  return sensorData;
+  return sensorData.save();
 };
 
 export const getLatestSensorData = async () => {

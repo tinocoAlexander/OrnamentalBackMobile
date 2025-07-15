@@ -2,8 +2,7 @@ import { Notification } from '../models/Notification';
 
 export const createNotification = async (data: any) => {
   const notification = new Notification(data);
-  await notification.save();
-  return notification;
+  return notification.save();
 };
 
 export const getNotifications = async () => {

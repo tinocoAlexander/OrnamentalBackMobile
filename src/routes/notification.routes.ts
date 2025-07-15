@@ -7,9 +7,12 @@ import {
   removeAll
 } from '../controllers/notification.controller';
 
+import { validateBody } from '../middlewares/validate.middleware';
+import { notificationSchema } from '../validations/notification.validation';
+
 const router = Router();
 
-router.post('/', create);
+router.post('/', validateBody(notificationSchema), create);
 router.get('/', list);
 router.patch('/:id/read', read);
 router.delete('/:id', remove);

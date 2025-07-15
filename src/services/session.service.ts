@@ -12,9 +12,7 @@ export const startSessionService = async () => {
     averageTemperature: 0,
     averageHumidity: 0,
   });
-
-  await session.save();
-  return session;
+  return session.save();
 };
 
 export const getSessionsService = async () => {
@@ -31,8 +29,7 @@ export const updateSessionPathService = async (id: string, position: any, phase:
     session.cuttingPath.push(position);
   }
 
-  await session.save();
-  return session;
+  return session.save();
 };
 
 export const updateSessionStatusService = async (id: string, status: string) => {
@@ -47,8 +44,7 @@ export const updateSessionStatusService = async (id: string, status: string) => 
     session.endTime = Date.now();
   }
 
-  await session.save();
-  return session;
+  return session.save();
 };
 
 export const getSessionByIdService = async (id: string) => {
