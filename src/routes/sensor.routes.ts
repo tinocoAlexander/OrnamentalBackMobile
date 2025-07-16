@@ -3,7 +3,8 @@ import {
   create,
   latest,
   all,
-  clear
+  clear,
+  stream
 } from '../controllers/sensor.controller';
 
 import { validateBody } from '../middlewares/validate.middleware';
@@ -13,6 +14,7 @@ const router = Router();
 
 router.post('/', validateBody(sensorDataSchema), create);
 router.get('/latest', latest);
+router.get('/stream', stream);
 router.get('/', all);
 router.delete('/', clear);
 
