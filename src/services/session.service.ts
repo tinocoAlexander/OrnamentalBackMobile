@@ -32,16 +32,17 @@ export const updateSessionPathService = async (id: string, position: any, phase:
   return session.save();
 };
 
-export const updateSessionStatusService = async (id: string, status: string) => {
-  const allowedStatuses = ['mapping', 'cutting', 'completed', 'interrupted', 'mapping_completed'];
-  if (!allowedStatuses.includes(status)) throw new Error('Invalid status');
-
+export const updateSessionStatusService = async (
+  id: string,
+  status: 'mapping' | 'cutting' | 'completed' | 'interrupted' | 'mapping_completed'
+) => {
   const session = await Session.findById(id);
   if (!session) throw new Error('Session not found');
 
   session.status = status;
+
   if (status === 'completed' || status === 'interrupted') {
-    session.endTime = Date.now();
+    session.endTime = new Date();
   }
 
   return session.save();
