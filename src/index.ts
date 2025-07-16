@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db';
-import sessionRoutes from './routes/session.routes';
-import esp32Routes from './routes/esp32.routes';
+import routes from './routes';
 import { errorHandler } from './middlewares/error.middleware';
-import notificationsRoutes from './routes/notification.routes';
 
 dotenv.config();
 
@@ -13,20 +13,26 @@ const app = express();
 
 connectDB();
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // Límite máximo de peticiones por IP
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use(helmet());
+app.use(limiter);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(errorHandler);
 
-// Aquí importaremos las rutas
-app.use('/api/sessions', sessionRoutes);
-app.use('/api/esp32', esp32Routes);
-app.use('/api/notifications', notificationsRoutes);
-
+app.use('/api', routes);
 
 app.get('/', (_req, res) => {
   res.json({ message: 'Backend de carrito podador funcionando!' });
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 
