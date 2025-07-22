@@ -16,8 +16,21 @@ export const startSessionService = async () => {
   return session.save();
 };
 
-export const getSessionsService = async () => {
-  return Session.find().sort({ createdAt: -1 });
+export const getSessionsService = async (page = 1, limit = 10) => {
+  const skip = (page - 1) * limit;
+  const sessions = await Session.find()
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Session.countDocuments();
+
+  return {
+    sessions,
+    total,
+    page,
+    pages: Math.ceil(total / limit),
+  };
 };
 
 export const updateSessionPathService = async (id: string, position: any, phase: string) => {

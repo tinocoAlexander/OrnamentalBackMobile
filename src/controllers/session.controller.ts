@@ -21,16 +21,19 @@ export const startSession = async (_req: Request, res: Response) => {
   }
 };
 
-export const getSessions = async (_req: Request, res: Response) => {
+export const getSessions = async (req: Request, res: Response) => {
   try {
-    const sessions = await getSessionsService();
-    res.json(successResponse(sessions, 'Sessions fetched'));
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
+    const result = await getSessionsService(page, limit);
+
+    res.json(successResponse(result, 'Sessions fetched'));
   } catch (error: any) {
     logger.error(error);
     res.status(500).json(errorResponse(error.message, 500));
   }
 };
-
 export const updateSessionPath = async (req: Request, res: Response) => {
   const { id } = req.params;
   const { position, phase } = req.body;
