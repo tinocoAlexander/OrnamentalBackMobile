@@ -9,6 +9,5 @@ export const sensorDataSchema = Joi.object({
     .min(0).max(100)
     .required(),
 
-  timestamp: Joi.number()
-    .required()
+  timestamp: Joi.required()
 });
