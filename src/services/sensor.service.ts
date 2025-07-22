@@ -6,7 +6,7 @@ export const saveSensorData = async (data: any) => {
 };
 
 export const getLatestSensorData = async () => {
-  return SensorData.find().sort({ timestamp: -1 }).limit(10);
+  return SensorData.find().sort({ createdAt: -1 }).limit(10);
 };
 
 export const getAllSensorData = async () => {
