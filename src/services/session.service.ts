@@ -1,4 +1,5 @@
 import { Session } from '../models/Session';
+import { SensorData } from '../models/SensorData';
 
 export const startSessionService = async () => {
   const session = new Session({
@@ -61,7 +62,40 @@ export const deleteSessionService = async (id: string) => {
 };
 
 export const getLatestSessionService = async () => {
-  const oneMinuteAgo = new Date(Date.now() - 60 * 1000);
-  return Session.findOne({ createdAt: { $gte: oneMinuteAgo } })
-    .sort({ createdAt: -1 });
+  const session = await Session.findOne().sort({ createdAt: -1 });
+  if (!session) return null;
+
+  // 📐 Área mapeada
+  const xs = session.mappingPath.map(p => p.x).filter(x => typeof x === 'number');
+  const ys = session.mappingPath.map(p => p.y).filter(y => typeof y === 'number');
+
+  if (xs.length > 1 && ys.length > 1) {
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+
+    const width = maxX - minX;
+    const height = maxY - minY;
+
+    session.areaCovered = Math.abs(width * height);
+  }
+
+  // 🌡️ Obtener últimos 10 sensores
+  const latestSensors = await SensorData.find().sort({ createdAt: -1 }).limit(10);
+
+  const temps = latestSensors.map(s => s.temperature);
+  const hums = latestSensors.map(s => s.humidity);
+
+  session.averageTemperature = temps.length
+    ? temps.reduce((a, b) => a + b) / temps.length
+    : 0;
+
+  session.averageHumidity = hums.length
+    ? hums.reduce((a, b) => a + b) / hums.length
+    : 0;
+
+  await session.save();
+
+  return session;
 };
