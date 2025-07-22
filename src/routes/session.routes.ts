@@ -18,6 +18,9 @@ const router = Router();
 router.post('/start', startSession);
 router.get('/', getSessions);
 
+// 🚨 Esta ruta debe ir ANTES de `/:id`
+router.get('/latest', getLatestSession);
+
 router.patch(
   '/:id/path',
   validateBody(
@@ -41,8 +44,5 @@ router.patch(
 
 router.get('/:id', getSessionById);
 router.delete('/:id', deleteSession);
-
-router.get('/latest', getLatestSession);
-
 
 export default router;
