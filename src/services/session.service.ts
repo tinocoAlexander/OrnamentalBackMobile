@@ -59,3 +59,9 @@ export const deleteSessionService = async (id: string) => {
   if (!session) throw { status: 404, message: 'Session not found' };
   return session;
 };
+
+export const getLatestSessionService = async () => {
+  const oneMinuteAgo = new Date(Date.now() - 60 * 1000);
+  return Session.findOne({ createdAt: { $gte: oneMinuteAgo } })
+    .sort({ createdAt: -1 });
+};

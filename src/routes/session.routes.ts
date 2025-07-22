@@ -5,7 +5,8 @@ import {
   updateSessionPath,
   updateSessionStatus,
   getSessionById,
-  deleteSession
+  deleteSession,
+  getLatestSession
 } from '../controllers/session.controller';
 
 import { validateBody } from '../middlewares/validate.middleware';
@@ -40,5 +41,8 @@ router.patch(
 
 router.get('/:id', getSessionById);
 router.delete('/:id', deleteSession);
+
+router.get('/latest', getLatestSession);
+
 
 export default router;

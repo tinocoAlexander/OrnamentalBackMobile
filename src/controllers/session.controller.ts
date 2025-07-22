@@ -5,7 +5,8 @@ import {
   updateSessionPathService,
   updateSessionStatusService,
   getSessionByIdService,
-  deleteSessionService
+  deleteSessionService,
+  getLatestSessionService 
 } from '../services/session.service';
 import { successResponse, errorResponse } from '../utils/response';
 import { logger } from '../utils/logger';
@@ -77,5 +78,18 @@ export const deleteSession = async (req: Request, res: Response) => {
   } catch (err: any) {
     logger.error(err);
     res.status(err.status || 500).json(errorResponse(err.message, err.status || 500));
+  }
+};
+
+export const getLatestSession = async (_req: Request, res: Response) => {
+  try {
+    const session = await getLatestSessionService();
+    if (!session) {
+      return res.status(404).json(errorResponse('No recent session found', 404));
+    }
+    res.json(successResponse(session, 'Latest session fetched'));
+  } catch (error: any) {
+    logger.error(error);
+    res.status(500).json(errorResponse(error.message, 500));
   }
 };
